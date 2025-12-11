@@ -3,11 +3,36 @@ name: Build
 on:
   push:
     branches: [ master ]
+      
   pull_request:
     branches: [ master ]
 
 jobs:
+  build-win:
+    if: true
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    permissions: 
+        actions: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW32
+          update: true
+          install: mingw-w64-i686-gcc mingw-w64-i686-pkg-config mingw-w64-i686-SDL2 autoconf automake make
+      - name: Setup ccache
+        uses: Chocobo1/setup-ccache-action@v1.5.2
+        with:
+            windows_compile_environment: msys2
+      - run: autoreconf -i --include=/mingw32/share/aclocal
+      - run: ./configure
+      - run: make all
+      
   build-linux:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,30 +41,12 @@ jobs:
       - run: make -j$(nproc) all
       - run: make dist
 
-  build-win:
-    if: false # Disabled as it takes too much time, more than half an hour
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW32
-          update: true
-          install: mingw-w64-i686-gcc mingw-w64-i686-pkg-config mingw-w64-i686-SDL2 autoconf automake make
-      - run: autoreconf -i --include=/mingw32/share/aclocal
-      - run: ./configure
-      - run: make all
-
   build-arm:
+    if: false
     runs-on: ubuntu-22.04
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Configure apt sources for armhf
       run: |
         # Backup original sources
@@ -54,12 +61,10 @@ jobs:
         echo "deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports jammy main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
         echo "deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
         echo "deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-
     - name: Add armhf architecture
       run: |
         sudo dpkg --add-architecture armhf
         sudo apt-get update || true  # Tolerate repository errors
-
     - name: Install dependencies
       run: |
         sudo apt-get install -y --no-install-recommends \
@@ -80,7 +85,6 @@ jobs:
           libglib2.0-dev-bin:armhf \
           debhelper \
           dh-make
-
     - name: Verify armhf dependencies
       run: |
         # Check that armhf libraries are installed
@@ -88,19 +92,15 @@ jobs:
           echo "Error: One or more armhf dependencies are missing."
           exit 1
         }
-
     - name: Run autogen.sh
       run: |
         ./autogen.sh
-
     - name: Configure for armhf
       run: |
         ./configure --host=arm-linux-gnueabihf CFLAGS="-O2 -fno-strict-aliasing -fno-strict-overflow -fsigned-char"
-
     - name: Build .deb package
       run: |
         make deb -j$(nproc)
-
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
