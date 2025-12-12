@@ -29,7 +29,14 @@ jobs:
             windows_compile_environment: msys2
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: ./configure
-      - run: make all
+      - run:  make -j$(nproc) all
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: acmame-win-${{ github.sha }}
+          path: |
+              **/*.exe
+              **/*.dll
       
   build-linux:
     if: false
