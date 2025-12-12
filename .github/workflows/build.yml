@@ -35,7 +35,11 @@ jobs:
                  debug_level=1
                  debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
-      - run: ./configure --host=i686-w64-mingw32.static --build=`./config.guess` --enable-static
+      - run: |
+          CFLAGS="-O2 --static" \
+          CXXFLAGS="-O2 --static" \
+          LDFLAGS="-static -static-libgcc -static-libstdc++ -static" \
+             ./configure
       - run: make -j$(nproc) all
       - name: Upload artifact
         uses: actions/upload-artifact@v4
