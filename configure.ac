@@ -195,7 +195,6 @@ if test $ac_auto_cflags = yes; then
 			AC_CHECK_CC_OPT([-mfpu=neon-vfpv4], [CFLAGS="$CFLAGS -mfpu=neon-vfpv4"], [])
 		else
 			dnl Generic
-			AC_CHECK_CC_OPT([-march=native], [CFLAGS="$CFLAGS -march=native"], [])
 			AC_CHECK_CC_OPT([-fomit-frame-pointer], [CFLAGS="$CFLAGS -fomit-frame-pointer"], [])
 		fi
 
