@@ -17,7 +17,7 @@ jobs:
     permissions: 
         actions: write
     env:
-       CCACHE_DIR: "$GITHUB_WORKSPACE/ccache"                
+       CCACHE_DIR: "$GITHUB_WORKSPACE/ccache"
     steps:
       - uses: actions/checkout@v2
       - uses: msys2/setup-msys2@v2
@@ -31,26 +31,19 @@ jobs:
             windows_compile_environment: msys2
             ccache_options: |
                  max_size=900M
-                 debug=true
+                 debug=false
                  debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: ./configure
-      - run: echo $GITHUB_WORKSPACE
-      - run: pwd
       - run: make -j$(nproc) all
-      - run: ls c*
-      - run: ls $GITHUB_WORKSPACE
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: acmame-win-${{ github.sha }}
           include-hidden-files: true
           path: |
-              $GITHUB_WORKSPACE/ccache/
               $GITHUB_WORKSPACE/ccadbg/
               ccadbg/
-              ccache/
-              **/*akefile*
               **/*.exe
       
   build-linux:
