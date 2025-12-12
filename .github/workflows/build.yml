@@ -17,7 +17,7 @@ jobs:
     permissions: 
         actions: write
     env:
-       CCACHE_DIR: ${{ GITHUB_WORKSPACE }}/ccache
+       CCACHE_DIR: ${{ github.workspace }}/ccache
     steps:
       - uses: actions/checkout@v2
       - uses: msys2/setup-msys2@v2
@@ -32,6 +32,7 @@ jobs:
             ccache_options: |
                  max_size=900M
                  debug=true
+                 debug_level=1
                  debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: ./configure
@@ -42,7 +43,6 @@ jobs:
           name: acmame-win-${{ github.sha }}
           include-hidden-files: true
           path: |
-              $GITHUB_WORKSPACE/ccadbg/
               ccadbg/
               **/*.exe
       
