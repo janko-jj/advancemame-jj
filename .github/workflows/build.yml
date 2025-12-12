@@ -36,9 +36,9 @@ jobs:
                  debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: |
-          CFLAGS="-O2 --static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2" \
-          CXXFLAGS="-O2 --static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2" \
-          LDFLAGS="-static -static-libgcc -static-libstdc++ -static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2" \
+          CFLAGS="-O2 --static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2 -lmingw32 -lSDL2main -lSDL2 -mwindows -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid -static-libgcc" \
+          CXXFLAGS="-O2 --static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2 -lmingw32 -lSDL2main -lSDL2 -mwindows -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid -static-libgcc" \
+          LDFLAGS="-static -static-libgcc -static-libstdc++ -static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2 -lmingw32 -lSDL2main -lSDL2 -mwindows -lm -ldinput8 -ldxguid -ldxerr8 -luser32 -lgdi32 -lwinmm -limm32 -lole32 -loleaut32 -lshell32 -lversion -luuid -static-libgcc" \
              ./configure
       - run: make -j$(nproc) all
       - name: Upload artifact
