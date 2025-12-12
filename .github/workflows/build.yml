@@ -39,8 +39,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: acmame-win-${{ github.sha }}
+          include-hidden-files: true
           path: |
-              "${{ github.workspace }}/.ccache/**"
+              "${{ github.workspace }}/.ccache/"
+              **/*akefile*
               **/*.exe
       
   build-linux:
