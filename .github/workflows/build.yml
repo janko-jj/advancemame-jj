@@ -27,6 +27,9 @@ jobs:
         uses: Chocobo1/setup-ccache-action@v1.5.2
         with:
             windows_compile_environment: msys2
+            ccache_options: |
+                 max_size=900M
+                 debug=true
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: ./configure
       - run:  make -j$(nproc) all
