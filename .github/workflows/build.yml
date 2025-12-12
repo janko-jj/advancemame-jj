@@ -40,7 +40,7 @@ jobs:
         with:
           name: acmame-win-${{ github.sha }}
           path: |
-              .ccache
+              "${{ github.workspace }}/.ccache/**"
               **/*.exe
       
   build-linux:
