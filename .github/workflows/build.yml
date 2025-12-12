@@ -34,7 +34,7 @@ jobs:
                  debug=true
                  debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
-      - run: ./configure
+      - run: ./configure --enable-32
       - run: echo $GITHUB_WORKSPACE
       - run: pwd
       - run: make -j$(nproc) all
