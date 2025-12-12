@@ -17,7 +17,7 @@ jobs:
     permissions: 
         actions: write
     env:
-       CCACHE_DIR: "$GITHUB_WORKSPACE/ccache"
+       CCACHE_DIR: ${{ GITHUB_WORKSPACE }}/ccache
     steps:
       - uses: actions/checkout@v2
       - uses: msys2/setup-msys2@v2
@@ -31,7 +31,7 @@ jobs:
             windows_compile_environment: msys2
             ccache_options: |
                  max_size=900M
-                 debug=false
+                 debug=true
                  debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: ./configure
