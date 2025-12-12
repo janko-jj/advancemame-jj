@@ -32,6 +32,7 @@ jobs:
             ccache_options: |
                  max_size=900M
                  debug=true
+                 debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: ./configure
       - run: echo $GITHUB_WORKSPACE
@@ -46,6 +47,8 @@ jobs:
           include-hidden-files: true
           path: |
               $GITHUB_WORKSPACE/ccache/
+              $GITHUB_WORKSPACE/ccadbg/
+              ccadbg/
               ccache/
               **/*akefile*
               **/*.exe
