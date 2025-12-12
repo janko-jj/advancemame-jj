@@ -36,9 +36,9 @@ jobs:
                  debug_dir=$GITHUB_WORKSPACE/ccadbg
       - run: autoreconf -i --include=/mingw32/share/aclocal
       - run: |
-          CFLAGS="-O2 --static" \
-          CXXFLAGS="-O2 --static" \
-          LDFLAGS="-static -static-libgcc -static-libstdc++ -static" \
+          CFLAGS="-O2 --static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2" \
+          CXXFLAGS="-O2 --static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2" \
+          LDFLAGS="-static -static-libgcc -static-libstdc++ -static -I/usr/include/SDL2 -I/usr/include -D_REENTRANT -pthread -lSDL2" \
              ./configure
       - run: make -j$(nproc) all
       - name: Upload artifact
